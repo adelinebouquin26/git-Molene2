@@ -17,28 +17,28 @@ $isLoggedIn = isset($_SESSION["id_utilisateur"]);
             <img src="..\image\ile_molene_recadrer.jpg" alt="Île de Molène">
             <div class="login-link">
                 <?php if ($isLoggedIn): ?>
-                    <a href="http://localhost/SITE_MOLENE/PHP/logout.php">Log out</a>
+                    <a href="http://localhost/SITE_MOLENE2/PHP/logout.php">Log out</a>
                 <?php else: ?>
-                    <a href="http://localhost/SITE_MOLENE/PHP/authentification.php">Log in</a>
+                    <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php">Log in</a>
                 <?php endif; ?>
             </div>
             <h1>Île de Molène<br>Érosion et Submersion</h1>
             <nav>
             <ul>
                 <li><a href="index.php">Accueil</a></li>
-                <li><a href="http://localhost/SITE_MOLENE/PHP/carte.php">Carte interactive</a></li>
+                <li><a href="http://localhost/SITE_MOLENE2/PHP/carte.php">Carte interactive</a></li>
                 <li>
                     <?php if ($isLoggedIn): ?>
-                        <a href="http://localhost/SITE_MOLENE/PHP/page_ajout.php">Ajouter des données</a>
+                        <a href="http://localhost/SITE_MOLENE2/PHP/page_ajout.php">Ajouter des données</a>
                     <?php else: ?>
-                        <a href="http://localhost/SITE_MOLENE/PHP/authentification.php">Ajouter des données</a>
+                        <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php">Ajouter des données</a>
                     <?php endif; ?>
                 </li>
                 <li>
                     <?php if ($isLoggedIn): ?>
-                        <a href="http://localhost/SITE_MOLENE/PHP/page_edition.php">Mon espace</a>
+                        <a href="http://localhost/SITE_MOLENE2/PHP/page_edition.php">Mon espace</a>
                     <?php else: ?>
-                        <a href="http://localhost/SITE_MOLENE/PHP/authentification.php">Mon espace</a>
+                        <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php">Mon espace</a>
                     <?php endif; ?>
                 </li>
             </ul>

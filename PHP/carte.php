@@ -12,7 +12,7 @@ $pdo = new PDO('mysql:host=localhost;dbname=data_molène', 'root', '');
     
     <!-- Styles-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="http://localhost/SITE_MOLENE/CSS/carte.css">
+    <link rel="stylesheet" href="http://localhost/SITE_MOLENE2/CSS/carte.css">
     
 </head>
 <body>

@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authentification</title>
     <!--<link rel="stylesheet" href="../CSS/auth.css"> -->
-    <link rel="stylesheet" href="http://localhost/SITE_MOLENE/CSS/auth.css">
+    <link rel="stylesheet" href="http://localhost/SITE_MOLENE2/CSS/auth.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
