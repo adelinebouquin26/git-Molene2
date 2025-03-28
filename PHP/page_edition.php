@@ -72,6 +72,29 @@ $allData = $allStmt->fetchAll(PDO::FETCH_ASSOC);
 // Récupérer les 5 dernières données ajoutées
 $recentStmt = $pdo->query("SELECT * FROM data ORDER BY date_ajout DESC LIMIT 5");
 $recentData = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['modifier'])) {
+        $id = $_POST['id_data'];
+        $nouveau_nom = $_POST['nom'];
+        $nouveau_niveau = $_POST['id_niveau'];
+
+        $stmt = $pdo->prepare("UPDATE data SET nom = ?, id_niveau = ? WHERE id_data = ?");
+        $stmt->execute([$nouveau_nom, $nouveau_niveau, $id]);
+
+        echo "<p class='success-message'>Donnée modifiée avec succès !</p>";
+    }
+
+    if (isset($_POST['supprimer'])) {
+        $id = $_POST['id_data'];
+
+        $stmt = $pdo->prepare("DELETE FROM data WHERE id_data = ?");
+        $stmt->execute([$id]);
+
+        echo "<p class='success-message'>Donnée supprimée avec succès !</p>";
+    }
+} 
+
 ?>
 
 
@@ -85,35 +108,42 @@ $recentData = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="http://localhost/SITE_MOLENE/CSS/style_page_edition.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
+    <script>
+    function toggleEditForm(id) {
+        let form = document.getElementById("edit-form-" + id);
+        form.style.display = form.style.display === "block" ? "none" : "block";
+    }
+</script>
+
+
 </head>
 <body>
     <header>
-        <h1 class="header-title">GeoRécits</h1>
+        <h1 class="site-title">GeoRécits</h1>
 
-        <div class="subtitle">
-            "Les récits façonnent notre perception du territoire, en tissant des liens entre les mémoires humaines et les dynamiques écologiques."
+        <div class="logout-link">
+                <a href="http://localhost/SITE_MOLENE/PHP/logout.php">Déconnexion</a>
         </div>
 
-        <!-- Bouton de déconnexion -->
-        <div class="logout-link">
-                <a href="http://localhost/SITE_MOLENE/PHP/logout.php">Log out</a>
-            </div>
 
         <div class="collaborator-name">
             <?= htmlspecialchars($prenom) ?> <?= htmlspecialchars($nom) ?>
         </div>
         <nav>
+            
         <ul>
             <li><a href="http://localhost/SITE_MOLENE/PHP/index.php">Accueil</a></li>
             <li><a href="http://localhost/SITE_MOLENE/PHP/carte.php">Carte interactive</a></li>
             <li><a href="http://localhost/SITE_MOLENE/PHP/page_ajout.php" >Ajouter des données</a>
+            <li><a href="http://localhost/SITE_MOLENE/PHP/page_edition.php">Mon espace</a></li>
         </ul>
-        </nav>
+    </nav>
     </header>
 
 
 
-
+    
         
     <section class="collaborators">
         <h2>Utilisateurs</h2>
@@ -231,38 +261,63 @@ $recentData = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
                     echo "<div class='data-card'>";
                     echo "<strong>" . htmlspecialchars($data['nom']) . "</strong>";
                     echo " (Ajouté le " . htmlspecialchars($data['date_ajout']) . ")";
-
-                    // Trouver le bon type correspondant à l'id_type de la donnée
-                $type_nom = "Inconnu"; // Valeur par défaut au cas où aucun type ne correspond
-                foreach ($types as $type) {
-                    if ($type['id_type'] == $data['id_type']) {
-                        $type_nom = htmlspecialchars($type['fk_type']);
-                        break; // On a trouvé le bon type, on arrête la boucle
+                
+                    // Type de fichier
+                    $type_nom = "Inconnu";
+                    foreach ($types as $type) {
+                        if ($type['id_type'] == $data['id_type']) {
+                            $type_nom = htmlspecialchars($type['fk_type']);
+                            break;
+                        }
                     }
-                }
-                echo " (Type : " . $type_nom . ")";
-            
-                echo " (Niveau : " . htmlspecialchars($data['id_niveau']) . ")";
-            
-                // Trouver le bon utilisateur correspondant à id_utilisateur de la donnée
-                $collab_nom = "Inconnu";
-                foreach ($collaborateurs as $collaborateur) {
-                    if ($collaborateur['id_utilisateur'] == $data['id_utilisateur']) {
-                        $collab_nom = htmlspecialchars($collaborateur['Prenom']) . " " . htmlspecialchars($collaborateur['Nom']);
-                        break;
+                    echo " (Type : " . $type_nom . ")";
+                
+                    echo " (Niveau : " . htmlspecialchars($data['id_niveau']) . ")";
+                
+                    // Collaborateur
+                    $collab_nom = "Inconnu";
+                    foreach ($collaborateurs as $collaborateur) {
+                        if ($collaborateur['id_utilisateur'] == $data['id_utilisateur']) {
+                            $collab_nom = htmlspecialchars($collaborateur['Prenom']) . " " . htmlspecialchars($collaborateur['Nom']);
+                            break;
+                        }
                     }
-                }
-                echo " (Collaborateur : " . $collab_nom . ")";
-
-                    // Vérifier si un chemin existe et le rendre cliquable
+                    echo " (Collaborateur : " . $collab_nom . ")";
+                
+                    // Lien pour voir/télécharger le fichier
                     if (!empty($data['chemin'])) {
                         $chemin_fichier = "/site_molene/" . ltrim($data['chemin'], '/');
                         echo "<p> <a href='" . htmlspecialchars($chemin_fichier) . "' target='_blank' class='btn'>Voir le fichier</a>";
                         echo "<a href='" . htmlspecialchars($chemin_fichier) . "' download class='btn'>Télécharger</a>";
                     }
-                    
-                    echo "</div>";
+                
+                    // BOUTON MODIFIER
+                    echo "<button onclick='toggleEditForm(" . $data['id_data'] . ")' class='btn'>Modifier<span>▼</span></button>";
+                
+                    // FORMULAIRE MODIFIER (À INSÉRER ICI)
+                    echo "<div id='edit-form-" . $data['id_data'] . "' class='edit-form' style='display: none;'>
+                            <form action='' method='POST'>
+                                <input type='hidden' name='id_data' value='" . $data['id_data'] . "'>
+                                
+                                <label>Nouveau Nom :</label>
+                                <input type='text' name='nom' value='" . htmlspecialchars($data['nom']) . "' required>
+                
+                                <label>Nouveau Niveau :</label>
+                                <select name='id_niveau'>
+                                    <option value='1' " . ($data['id_niveau'] == 1 ? 'selected' : '') . ">1</option>
+                                    <option value='2' " . ($data['id_niveau'] == 2 ? 'selected' : '') . ">2</option>
+                                    <option value='3' " . ($data['id_niveau'] == 3 ? 'selected' : '') . ">3</option>
+                                    <option value='4' " . ($data['id_niveau'] == 4 ? 'selected' : '') . ">4</option>
+                                </select>
+                
+                                <button type='submit' name='modifier'>Enregistrer</button>
+                                <button type='submit' name='supprimer' onclick='return confirm(\"Supprimer cette donnée ?\")'>Supprimer</button>
+                            </form>
+                        </div>";
+                
+                    echo "</div>"; // Fin du data-card
                 }
+                
             } else {
                 echo "<p>Aucune donnée disponible.</p>";
             }
@@ -304,4 +359,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </body>
 </html>
-
