@@ -1,0 +1,177 @@
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #FFF6F3;
+}
+
+
+/* Section Hero */
+.hero {
+    position: relative;
+    text-align: center;
+    color: white;
+    justify-content: flex-end; /* Aligne les éléments en bas */
+
+}
+
+.hero img {
+    width: 100%;
+    height: auto;
+}
+
+
+
+/* Effet sombre */
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 99.2%;
+    background: rgba(0, 0, 0, 0.5); /* Ombre sombre */
+    z-index: 1;
+}
+
+.hero h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    padding: 15px 30px;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.login-link {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    z-index: 3;
+}
+
+.login-link a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Placer la barre de navigation sur l'image */
+nav {
+    position: absolute;
+    bottom: 0;
+    /*top: 400px;  Ajuste selon le besoin */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 10px 0;
+    z-index: 3; /* Plus haut que l'effet sombre */
+}
+
+/* Styles des liens de navigation */
+nav ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    flex: 1;
+    text-align: center;
+}
+
+nav ul li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: white; /* Texte blanc */
+    font-weight: bold;
+    padding: 10px 15px;
+    display: block;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+nav ul li a:hover {
+    border-bottom: 3px solid #0373BB;
+    color: #0373BB;
+}
+
+/* Sections principales */
+.intro, .featured {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+h2 {
+    color : #011F43;
+}
+
+/* Section image + texte */
+.featured {
+    display: flex;
+    align-items: center;
+}
+
+.featured img {
+    max-width: 50%;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+.featured-text h3 {
+    margin: 0 0 10px;
+    color: #011F43;
+}
+
+.featured-text button {
+    background-color: #011F43;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Footer */
+footer {
+    background-color: #011F43;
+    color: white;
+    padding: 20px 0;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.footer-section h4 {
+    margin-bottom: 10px;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li a {
+    text-decoration: none;
+    color: white;
+}
