@@ -1,6 +1,21 @@
 <?php
-session_start();
+include('config.php'); // Connexion à la base de données
+
 $isLoggedIn = isset($_SESSION["id_utilisateur"]);
+
+// Récupération des collaborateurs du projet
+try {
+    $stmt = $pdo->prepare("
+        SELECT u.nom, u.prenom, up.role 
+        FROM utilisateur u 
+        JOIN utilisateur_projet up ON u.id_utilisateur = up.id_utilisateur 
+        WHERE up.id_projet = 1
+    ");
+    $stmt->execute();
+    $collaborateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -17,43 +32,34 @@ $isLoggedIn = isset($_SESSION["id_utilisateur"]);
             <img src="..\image\ile_molene_recadrer.jpg" alt="Île de Molène">
             <div class="login-link">
                 <?php if ($isLoggedIn): ?>
-                    <a href="http://localhost/SITE_MOLENE2/PHP/logout.php">Log out</a>
+                    <a href="http://localhost/SITE_MOLENE2/PHP/logout.php"> Déconnexion </a>
                 <?php else: ?>
-                    <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php">Log in</a>
+                    <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php"> Connexion </a>
                 <?php endif; ?>
             </div>
             <h1>Île de Molène<br>Érosion et Submersion</h1>
             <nav>
-            <ul>
-                <li><a href="index.php">Accueil</a></li>
-                <li><a href="http://localhost/SITE_MOLENE2/PHP/carte.php">Carte interactive</a></li>
-                <li>
-                    <?php if ($isLoggedIn): ?>
-                        <a href="http://localhost/SITE_MOLENE2/PHP/page_ajout.php">Ajouter des données</a>
-                    <?php else: ?>
-                        <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php">Ajouter des données</a>
-                    <?php endif; ?>
-                </li>
-                <li>
-                    <?php if ($isLoggedIn): ?>
-                        <a href="http://localhost/SITE_MOLENE2/PHP/page_edition.php">Mon espace</a>
-                    <?php else: ?>
-                        <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php">Mon espace</a>
-                    <?php endif; ?>
-                </li>
-            </ul>
-        </nav>
+                <ul>
+                    <li><a href="projets.php">Accueil</a></li>
+                    <li><a href="index.php">Projet</a></li>
+                    <li><a href="http://localhost/SITE_MOLENE2/PHP/carte.php">Carte interactive</a></li>
+                    <li><a href="http://localhost/SITE_MOLENE2/PHP/page_edition.php">Données</a></li>
+                    <li>
+                        <?php if ($isLoggedIn): ?>
+                            <a href="http://localhost/SITE_MOLENE2/PHP/page_edition.php">Mon espace</a>
+                        <?php else: ?>
+                            <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php">Mon espace</a>
+                        <?php endif; ?>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </header>
     
     <main>
         <section class="intro">
             <h2>Changement climatique : Molène en première ligne</h2>
-            <p>L’Île de Molène subit les effets croissants du changement climatique, avec une intensification de l’érosion côtière et des submersions marines. Ces phénomènes transforment progressivement le littoral et posent des enjeux majeurs pour l’environnement et les infrastructures locales.
-
-                Une cartographie collaborative des impacts Ce site permet de recenser et visualiser les données sur l’érosion et les submersions grâce aux contributions des utilisateurs.
-                
-                Analyse et suivi en temps réel En cliquant sur la carte, accédez à une page détaillée pour explorer les observations et mieux comprendre l’évolution du littoral. Votre participation est essentielle pour affiner les analyses et anticiper les évolutions futures.</p>
+            <p>L’Île de Molène subit les effets croissants du changement climatique, avec une intensification de l’érosion côtière et des submersions marines...</p>
         </section>
 
         <section class="featured">
@@ -61,6 +67,20 @@ $isLoggedIn = isset($_SESSION["id_utilisateur"]);
             <div class="featured-text">
                 <h3>Je pars cartographier une île bretonne à partir de ZERO</h3>
                 <button>Lire l'article</button>
+            </div>
+        </section>
+
+        <!-- Section Collaborateurs -->
+        <section class="collaborators">
+            <h2>Collaborateurs</h2>
+            <div class="collaborators-container">
+                <?php foreach ($collaborateurs as $collaborateur): ?>
+                    <div class="collaborator-card">
+                        <img src="../image/avatar-placeholder.jpg" alt="Avatar">
+                        <div class="collaborator-name"><?= htmlspecialchars($collaborateur['prenom'] . ' ' . $collaborateur['nom']) ?></div>
+                        <div class="collaborator-role"><?= htmlspecialchars($collaborateur['role']) ?></div>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </section>
     </main>

@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION["prenom"] = $user["Prenom"];
                 $_SESSION["id_fonction"] = $user["id_fonction"];
                 
-                header("Location: page_edition.php");
+                header("Location: projets.php");
                 exit();
             } else {
                 $_SESSION["message"] = "Mot de passe incorrect.";

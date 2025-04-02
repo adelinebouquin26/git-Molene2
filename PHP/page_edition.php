@@ -11,7 +11,7 @@ $id_fonction = $_SESSION["id_fonction"];
 
 // Inclure les fichiers nécessaires
 include('collaborateurs.php');
-include('donnees.php');
+//include('donnees.php');
 include('types.php');
 
 // Connexion à la base
