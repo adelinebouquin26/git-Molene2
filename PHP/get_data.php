@@ -1,12 +1,19 @@
 <?php
-// Connexion à la base de données
-$pdo = new PDO('mysql:host=localhost;dbname=data_molène', 'root', '');
+$pdo = new PDO('mysql:host=localhost;dbname=data_molène', 'root', '', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
 
-// Récupération des données (adaptation selon ta base)
-$query = $pdo->query("SELECT nom, lat, lng, description FROM data WHERE lat IS NOT NULL AND lng IS NOT NULL");
-$points = $query->fetchAll(PDO::FETCH_ASSOC);
+$data = json_decode(file_get_contents("php://input"), true);
+$nom = $data['nom'];
 
-// Envoi des données en JSON
-header('Content-Type: application/json');
-echo json_encode($points);
+$stmt = $pdo->prepare("SELECT chemin FROM data WHERE nom = ?");
+$stmt->execute([$nom]);
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$result) {
+    echo json_encode(["error" => "Aucune donnée trouvée pour ce nom"]);
+    exit;
+}
+
+echo json_encode($result);
 ?>
