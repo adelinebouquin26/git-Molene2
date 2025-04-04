@@ -19,30 +19,19 @@ echo "<script>var savedZones = " . json_encode($data_polygons) . ";</script>";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
     <title>Hex Picker - Leaflet Map with H3</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    <link rel="stylesheet" href="../CSS/carte.css">
     <script src="https://unpkg.com/h3-js@4.1.0/dist/h3-js.umd.js"></script>
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; }
-        #map { height: 100%; width: 100%; }
-        .card {
-            position: absolute; top: 10px; right: 10px;
-            background-color: white; border: 1px solid #ccc; border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 15px; z-index: 1000;
-            width: 250px;
-        }
-        #hexagonCounter { font-weight: bold; text-align: center; }
-    </style>
-=======
+
+
     <title>Cartographie des récits</title>
     
     <!-- Styles-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="http://localhost/SITE_MOLENE2/CSS/carte.css">
     
->>>>>>> c4d4ba540a83745b63e1c231ba9aac2e161c271f
 </head>
 <body>
     
@@ -174,7 +163,7 @@ if (typeof savedZones !== "undefined") {
             headers: { "Content-Type": "application/json" }
         }).then(res => res.json()).then(data => {
             if (data.success) {
-                window.location.href = `zones.php?nom=${encodeURIComponent(nom)}`;
+                window.location.href = `zone.php?nom=${encodeURIComponent(nom)}`;
             }
         });
     });

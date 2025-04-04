@@ -15,5 +15,12 @@ if (!$result) {
     exit;
 }
 
+// 🔹 Définir l'URL de base (modifie selon ton projet)
+$baseURL = "http://localhost/SITE_MOLENE2/"; 
+
+// 🔹 Construire le chemin absolu
+$result['chemin'] = $baseURL . ltrim($result['chemin'], "/"); // Supprime "/" en début si présent
+
+// 🔹 Envoyer la réponse JSON avec le chemin absolu
 echo json_encode($result);
 ?>

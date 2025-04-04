@@ -54,7 +54,7 @@ echo "<script>var savedZones = " . json_encode($data_polygons) . ";</script>";
                     color: "transparent",  // 🔹 Bordure invisible
                     weight: 0,             // 🔹 Supprime les contours
                     fillColor: "blue",     // 🔹 Uniformiser la couleur
-                    fillOpacity: 0.8,        // 🔹 Améliorer la fusion visuelle
+                    fillOpacity: 0.1,        // 🔹 Améliorer la fusion visuelle
                     fillRule: "evenodd",
 
                 }).addTo(map);

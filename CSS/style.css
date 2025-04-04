@@ -227,3 +227,79 @@ footer {
     font-size: 12px;
     color: #555;
 }
+
+/*Barre de recherche*/
+/* Barre de recherche */
+#search-user {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    color: #333;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+/* Focus sur la barre de recherche */
+#search-user:focus {
+    border-color: #0373BB;
+    outline: none;
+}
+
+/* Résultats de recherche */
+#user-results {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#user-results div {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Effet hover sur les résultats de recherche */
+#user-results div:hover {
+    background-color: #f1f1f1;
+}
+
+/* Style des résultats de recherche cliquables */
+#user-results div:last-child {
+    border-bottom: none;
+}
+
+/* Section d'invitation */
+.invitation-notification {
+    background-color: #e7f7e7;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.invitation-notification button {
+    background-color: #0373BB;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.invitation-notification button:hover {
+    background-color: #025a8e;
+}

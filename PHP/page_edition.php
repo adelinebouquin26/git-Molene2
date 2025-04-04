@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de Collaboration</title>
     <link rel="stylesheet" href="http://localhost/SITE_MOLENE2/CSS/style_page_edition.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
     <script>

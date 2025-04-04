@@ -20,19 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_niveau = $_POST['id_niveau'];
     $id_utilisateur = $_SESSION["id_utilisateur"]; // ✅ Utiliser l'ID et non le nom
 
-    // Gestion du fichier uploadé
-    $chemin = "";
-    if (!empty($_FILES["fichier"]["name"])) {
-        $dossierUpload = "uploads/";
-        if (!is_dir($dossierUpload)) {
-            mkdir($dossierUpload, 0777, true);
-        }
 
-        $fichier_nom = basename($_FILES["fichier"]["name"]);
-        $chemin = $dossierUpload . $fichier_nom;
-        move_uploaded_file($_FILES["fichier"]["tmp_name"], $chemin);
-    }
 
+    $fichier_nom = basename($_FILES["fichier"]["name"]);
+    $dossierUpload = "../uploads/";
+    $chemin = $dossierUpload . $fichier_nom;
+    move_uploaded_file($_FILES["fichier"]["tmp_name"], $chemin);
     // Insérer dans la base de données
     $stmt = $pdo->prepare("INSERT INTO data (nom, date_prise, date_ajout, chemin, id_type, id_niveau, id_utilisateur) 
                            VALUES (?, ?, ?, ?, ?, ?, ?)");

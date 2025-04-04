@@ -13,6 +13,14 @@ try {
     ");
     $stmt->execute();
     $collaborateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Vérifier si l'utilisateur a une invitation en attente
+    $stmtNotif = $pdo->prepare("SELECT role FROM utilisateur_projet WHERE id_utilisateur = :id_utilisateur AND id_projet = :id_projet AND role = 'en attente'");
+    $stmtNotif->bindParam(":id_utilisateur", $id_utilisateur);
+    $stmtNotif->bindParam(":id_projet", $id_projet);
+    $stmtNotif->execute();
+    $invitation = $stmtNotif->fetch(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
@@ -25,6 +33,8 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Île de Molène - Érosion et Submersion</title>
     <link rel="stylesheet" href="../CSS/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -82,6 +92,20 @@ try {
                     </div>
                 <?php endforeach; ?>
             </div>
+
+            <!-- Barre de recherche d'utilisateur -->
+            <input type="text" id="search-user" placeholder="Rechercher et Ajouter un nouveau collaborateur...">
+            <div id="user-results"></div>
+        
+            <!-- Zone de notification d'invitation -->
+            <?php if ($invitation): ?>
+                <div class="invitation-notification">
+                    <p>Vous avez été invité à rejoindre ce projet.</p>
+                    <button onclick="acceptInvitation(<?= $id_projet ?>, <?= $id_utilisateur ?>)">Accepter</button>
+                    <button onclick="rejectInvitation(<?= $id_projet ?>, <?= $id_utilisateur ?>)">Refuser</button>
+                </div>
+            <?php endif; ?>
+
         </section>
     </main>
     
@@ -116,5 +140,48 @@ try {
             </div>
         </div>
     </footer>
+
+    <!--Collaborateur ajout-->
+    <script>
+        $(document).ready(function() {
+            $('#user-results').hide(); // Cache la barre au chargement de la page
+
+            $('#search-user').on('keyup', function() {
+                let query = $(this).val().trim(); // Supprime les espaces inutiles
+
+                if (query.length > 1) {  
+                    $.post('search_user.php', {query: query}, function(data) {
+                        if (data.trim() !== '') { // Vérifie s'il y a des résultats
+                            $('#user-results').html(data).show(); // Affiche la barre
+                        } else {
+                            $('#user-results').hide(); // Cache la barre si aucun résultat
+                        }
+                    });
+                } else {
+                    $('#user-results').hide(); // Cache si l'entrée est vide
+                }
+            });
+        });
+
+
+        function inviteUser(userId, projectId) {
+            $.post('invite_user.php', {user_id: userId, project_id: projectId}, function(response) {
+                alert(response);
+            });
+        }
+
+        function acceptInvitation(projectId, userId) {
+            $.post('handle_invitation.php', {project_id: projectId, user_id: userId, action: 'accept'}, function() {
+                location.reload();
+            });
+        }
+
+        function rejectInvitation(projectId, userId) {
+            $.post('handle_invitation.php', {project_id: projectId, user_id: userId, action: 'reject'}, function() {
+                location.reload();
+            });
+        }
+
+    </script>
 </body>
 </html>
