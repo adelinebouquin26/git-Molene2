@@ -11,7 +11,7 @@ $id_fonction = $_SESSION["id_fonction"];
 
 // Inclure les fichiers nécessaires
 include('collaborateurs.php');
-include('donnees.php');
+//include('donnees.php');
 include('types.php');
 
 // Connexion à la base
@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de Collaboration</title>
-    <link rel="stylesheet" href="http://localhost/SITE_MOLENE/CSS/style_page_edition.css">
+    <link rel="stylesheet" href="http://localhost/SITE_MOLENE2/CSS/style_page_edition.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1 class="site-title">GeoRécits</h1>
 
         <div class="logout-link">
-                <a href="http://localhost/SITE_MOLENE/PHP/logout.php">Déconnexion</a>
+                <a href="http://localhost/SITE_MOLENE2/PHP/logout.php">Déconnexion</a>
         </div>
 
 
@@ -133,10 +133,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <nav>
             
         <ul>
-            <li><a href="http://localhost/SITE_MOLENE/PHP/index.php">Accueil</a></li>
-            <li><a href="http://localhost/SITE_MOLENE/PHP/carte.php">Carte interactive</a></li>
-            <li><a href="http://localhost/SITE_MOLENE/PHP/page_ajout.php" >Ajouter des données</a>
-            <li><a href="http://localhost/SITE_MOLENE/PHP/page_edition.php">Mon espace</a></li>
+            <li><a href="http://localhost/SITE_MOLENE2/PHP/index.php">Accueil</a></li>
+            <li><a href="http://localhost/SITE_MOLENE2/PHP/carte.php">Carte interactive</a></li>
+            <li><a href="http://localhost/SITE_MOLENE2/PHP/page_ajout.php" >Ajouter des données</a>
+            <li><a href="http://localhost/SITE_MOLENE2/PHP/page_edition.php">Mon espace</a></li>
         </ul>
     </nav>
     </header>

@@ -19,6 +19,7 @@ echo "<script>var savedZones = " . json_encode($data_polygons) . ";</script>";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>Hex Picker - Leaflet Map with H3</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
@@ -34,6 +35,14 @@ echo "<script>var savedZones = " . json_encode($data_polygons) . ";</script>";
         }
         #hexagonCounter { font-weight: bold; text-align: center; }
     </style>
+=======
+    <title>Cartographie des récits</title>
+    
+    <!-- Styles-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="http://localhost/SITE_MOLENE2/CSS/carte.css">
+    
+>>>>>>> c4d4ba540a83745b63e1c231ba9aac2e161c271f
 </head>
 <body>
     
