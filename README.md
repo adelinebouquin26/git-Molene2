@@ -85,5 +85,7 @@ Suivi et contact
 Projet réalisé dans le cadre de l’ISEN Brest, sous la supervision de :
 
 Thierry Le Pors (aspects techniques)
+
 Manuel Irles (suivi projet / pédagogie)
+
 Isabelle Elizéon (porteuse du besoin) 
