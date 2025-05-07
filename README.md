@@ -45,9 +45,9 @@ Importer la base de données :
 
 Lancer le serveur local (XAMPP, WAMP ou autre) :
 
-Placer le dossier du projet dans htdocs
-Ajouter le dossier uploads avec les données du projet molène dans le dossier de projet.
-Accéder via http://localhost/nom-du-dossier
+- Placer le dossier du projet dans htdocs
+- Ajouter le dossier uploads avec les données du projet molène dans le dossier de projet
+- Accéder via http://localhost/nom-du-dossier
 
 Structure du projet
 
