@@ -1,4 +1,5 @@
 Récits et Imaginaires Croisés
+
 Présentation du projet
 Récits et Imaginaires Croisés est une plateforme web collaborative permettant d'explorer, de structurer et de visualiser des données ancrés dans des territoires spécifiques. Elle associe des contenus multimédias (textes, sons, images) à une carte interactive basée sur un maillage hexagonal dynamique.
 
