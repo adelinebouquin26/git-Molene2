@@ -4,8 +4,6 @@ Présentation du projet
 
 Récits et Imaginaires Croisés est une plateforme web collaborative permettant d'explorer, de structurer et de visualiser des données ancrés dans des territoires spécifiques. Elle associe des contenus multimédias (textes, sons, images) à une carte interactive basée sur un maillage hexagonal dynamique.
 
-Ce projet s’inscrit à la croisée des technologies du web, de la cartographie et de la narration.
-
 Fonctionnalités principales
 - Création de compte et authentification
 - Ajout, modification et suppression de données multimédias
@@ -74,11 +72,13 @@ index.php                → Page d’accueil
                 └──> ajout_donnee.php          → Ajout de données
 
 Compte pour se connecter au site web avec les droits du projet Molène:
+
 Adresse mail : admin_demo@gmail.com
 Mot de passe : Version1_2025!
 
 
 Suivi et contact
+
 Projet réalisé dans le cadre de l’ISEN Brest, sous la supervision de :
 
 Thierry Le Pors (aspects techniques)
