@@ -1,8 +1,19 @@
 <?php
 
-session_start();
+include('config.php');
+
+//$id_projet = isset($_GET['id_projet']) ? intval($_GET['id_projet']) : null;
+//if (!$id_projet) {
+//    die("Aucun projet sélectionné.");
+//}
 
 $isLoggedIn = isset($_SESSION["id_utilisateur"]);
+
+//vérifie si l'utilisateur est connecté 
+if (!isset($_SESSION['id_utilisateur'])) {
+    header("Location: authentification.php");
+    exit();
+}
 
 $id_utilisateur = $_SESSION["id_utilisateur"];
 $nom = $_SESSION["nom"];
@@ -15,7 +26,7 @@ include('collaborateurs.php');
 include('types.php');
 
 // Connexion à la base
-$pdo = new PDO('mysql:host=localhost;dbname=data_molène', 'root', '');
+//$pdo = new PDO('mysql:host=localhost;dbname=data_molène', 'root', '');
 
 // Déterminer l'ordre de tri par défaut
 $orderBy = "date_ajout DESC"; // Valeur par défaut
@@ -69,10 +80,6 @@ $query = "SELECT * FROM data $whereClause ORDER BY $orderBy";
 $allStmt = $pdo->query($query);
 $allData = $allStmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Récupérer les 5 dernières données ajoutées
-$recentStmt = $pdo->query("SELECT * FROM data ORDER BY date_ajout DESC LIMIT 5");
-$recentData = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['modifier'])) {
         $id = $_POST['id_data'];
@@ -120,42 +127,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <header>
-        <h1 class="site-title">GeoRécits</h1>
+        <h1 class="site-title">Données</h1>
 
         <div class="logout-link">
                 <a href="http://localhost/SITE_MOLENE2/PHP/logout.php">Déconnexion</a>
         </div>
 
 
-        <div class="collaborator-name">
-            <?= htmlspecialchars($prenom) ?> <?= htmlspecialchars($nom) ?>
-        </div>
+
         <nav>
             
         <ul>
-            <li><a href="http://localhost/SITE_MOLENE2/PHP/index.php">Accueil</a></li>
-            <li><a href="http://localhost/SITE_MOLENE2/PHP/carte.php">Carte interactive</a></li>
-            <li><a href="http://localhost/SITE_MOLENE2/PHP/page_ajout.php" >Ajouter des données</a>
-            <li><a href="http://localhost/SITE_MOLENE2/PHP/page_edition.php">Mon espace</a></li>
+            <li><a href="http://localhost/SITE_MOLENE2/PHP/projet_molene.php">Projet sélectionné</a></li>
+            <li><a href="http://localhost/SITE_MOLENE2/PHP/carte.php">Carte</a></li>
+            <li><a href="http://localhost/SITE_MOLENE2/PHP/ajout_donnee.php" >Ajouter des données</a>
         </ul>
     </nav>
     </header>
 
-
-
-    
-        
-    <section class="collaborators">
-        <h2>Utilisateurs</h2>
-        <div class="collab-list">
-            <?php
-            // Afficher les collaborateurs dynamiquement
-            foreach ($collaborateurs as $collaborateur) {
-                echo "<div class='collaborator'>" . htmlspecialchars($collaborateur['Prenom']) . " " . htmlspecialchars($collaborateur['Nom']) . "</div>";
-            }
-            ?>
-        </div>
-    </section>
 
     <section class="actions">
     <div class="sort-container">
@@ -200,55 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </section>
 
-    <section class="recent-data">
-    <h2>Données récemment ajoutées</h2>
     
-    <div class="data-list">
-        <?php
-        if (!empty($recentData)) {
-            foreach ($recentData as $data) {
-                echo "<div class='data-card'>";
-                echo "<strong>" . htmlspecialchars($data['nom']) . "</strong>";
-                echo " (Ajouté le " . htmlspecialchars($data['date_ajout']) . ")";
-            
-                // Trouver le bon type correspondant à l'id_type de la donnée
-                $type_nom = "Inconnu"; // Valeur par défaut au cas où aucun type ne correspond
-                foreach ($types as $type) {
-                    if ($type['id_type'] == $data['id_type']) {
-                        $type_nom = htmlspecialchars($type['fk_type']);
-                        break; // On a trouvé le bon type, on arrête la boucle
-                    }
-                }
-                echo " (Type : " . $type_nom . ")";
-            
-                echo " (Niveau : " . htmlspecialchars($data['id_niveau']) . ")";
-            
-                // Trouver le bon utilisateur correspondant à id_utilisateur de la donnée
-                $collab_nom = "Inconnu";
-                foreach ($collaborateurs as $collaborateur) {
-                    if ($collaborateur['id_utilisateur'] == $data['id_utilisateur']) {
-                        $collab_nom = htmlspecialchars($collaborateur['Prenom']) . " " . htmlspecialchars($collaborateur['Nom']);
-                        break;
-                    }
-                }
-                echo " (Collaborateur : " . $collab_nom . ")";
-            
-                    // Vérifier si un chemin existe et afficher les liens de fichier
-                    if (!empty($data['chemin'])) {
-                        $chemin_fichier = "/site_molene/" . ltrim($data['chemin'], '/');
-                        
-                        echo "<p> <a href='" . htmlspecialchars($chemin_fichier) . "' target='_blank' class='btn'>Voir le fichier</a>";
-                        echo "<a href='" . htmlspecialchars($chemin_fichier) . "' download class='btn'>Télécharger</a>";
-                    }
-    
-                    echo "</div>"; // Fermeture du div data-card
-                }
-            } else {
-                echo "<p>Aucune donnée disponible.</p>";
-            }
-            ?>
-        </div>
-    </section>
 
 <section class="recent-data"> 
     <h2>Gérer l'affichage des données</h2>
@@ -259,10 +200,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!empty($allData)) {
                 foreach ($allData as $data) {
                     echo "<div class='data-card'>";
+
                     echo "<strong>" . htmlspecialchars($data['nom']) . "</strong>";
-                    echo " (Ajouté le " . htmlspecialchars($data['date_ajout']) . ")";
-                
-                    // Type de fichier
+
+                    // Bouton info en haut à droite
+                    echo "<button class='btn info-btn' onclick='toggleDetails(" . $data['id_data'] . ")'>ℹ</button>";
+
+                    // Détails superposés
+                    echo "<div id='details-" . $data['id_data'] . "' class='details-overlay'>
+                            <p>Ajouté le " . htmlspecialchars($data['date_ajout']) . "</p>";
+
                     $type_nom = "Inconnu";
                     foreach ($types as $type) {
                         if ($type['id_type'] == $data['id_type']) {
@@ -270,11 +217,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             break;
                         }
                     }
-                    echo " (Type : " . $type_nom . ")";
-                
-                    echo " (Niveau : " . htmlspecialchars($data['id_niveau']) . ")";
-                
-                    // Collaborateur
+                    echo "<p>Type : $type_nom</p>";
+                    echo "<p>Niveau : " . htmlspecialchars($data['id_niveau']) . "</p>";
+
                     $collab_nom = "Inconnu";
                     foreach ($collaborateurs as $collaborateur) {
                         if ($collaborateur['id_utilisateur'] == $data['id_utilisateur']) {
@@ -282,12 +227,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             break;
                         }
                     }
-                    echo " (Collaborateur : " . $collab_nom . ")";
+                    echo "<p>Collaborateur : $collab_nom</p>";
+                    echo "</div>";
                 
                     // Lien pour voir/télécharger le fichier
                     if (!empty($data['chemin'])) {
-                        $chemin_fichier = "/site_molene/" . ltrim($data['chemin'], '/');
-                        echo "<p> <a href='" . htmlspecialchars($chemin_fichier) . "' target='_blank' class='btn'>Voir le fichier</a>";
+                        $chemin_fichier = "/site_molene2/" . ltrim($data['chemin'], '/');
+                        echo "<p> <a href='" . htmlspecialchars($chemin_fichier) . "'  class='btn'>Voir le fichier</a>";
                         echo "<a href='" . htmlspecialchars($chemin_fichier) . "' download class='btn'>Télécharger</a>";
                     }
                 
@@ -355,6 +301,36 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+</script>
+
+
+<script>
+let currentOpenDetails = null; // garde en mémoire quel détail est ouvert
+
+function toggleDetails(id) {
+    const el = document.getElementById('details-' + id);
+
+    if (currentOpenDetails && currentOpenDetails !== el) {
+        currentOpenDetails.style.display = 'none'; // Ferme l'ancien si un autre est ouvert
+    }
+
+    if (el.style.display === 'block') {
+        el.style.display = 'none';
+        currentOpenDetails = null;
+    } else {
+        el.style.display = 'block';
+        currentOpenDetails = el;
+    }
+}
+
+// Fermer les détails quand on clique ailleurs
+document.addEventListener('click', function(event) {
+    // Si un détail est ouvert ET que le clic est à l'extérieur
+    if (currentOpenDetails && !event.target.closest('.details-overlay') && !event.target.classList.contains('info-btn')) {
+        currentOpenDetails.style.display = 'none';
+        currentOpenDetails = null;
+    }
+});
 </script>
 
 </body>

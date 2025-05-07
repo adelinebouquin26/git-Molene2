@@ -2,13 +2,14 @@
 $pdo = new PDO('mysql:host=localhost;dbname=data_molène', 'root', '');
 
 // Récupérer toutes les zones de données stockées
-$stmt = $pdo->query("SELECT dp.h3_zone, d.nom, dp.data_id FROM data_polygons dp JOIN data d ON dp.data_id = d.id_data");
+$stmt = $pdo->query("SELECT dp.h3_zone, d.nom FROM data_polygons dp JOIN data d ON dp.data_id = d.id_data");
+
 
 $data_polygons = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
+// Convertir les données pour JavaScript
 foreach ($data_polygons as &$polygon) {
-    $polygon['h3_zone'] = json_decode($polygon['h3_zone'], true);
+    $polygon['h3_zone'] = json_decode($polygon['h3_zone'], true); // Décoder le JSON des hexagones
 }
 
 echo "<script>var savedZones = " . json_encode($data_polygons) . ";</script>";
@@ -19,199 +20,126 @@ echo "<script>var savedZones = " . json_encode($data_polygons) . ";</script>";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hex Picker - Leaflet Map with H3</title>
+    <title>Zones Enregistrées</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
-    <link rel="stylesheet" href="../CSS/carte.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/h3-js@4.1.0/dist/h3-js.umd.js"></script>
-
-
-    <title>Cartographie des récits</title>
-    
-    <!-- Styles-->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="http://localhost/SITE_MOLENE2/CSS/carte.css">
-    
+
 </head>
 <body>
-    
-    <div id="map"></div>
-
-    <div class="card">
-        <select id="resolutionSelect">
-            <?php for ($i = 0; $i <= 15; $i++) { echo "<option value='$i'>Resolution: $i</option>"; } ?>
-        </select>
-        <input type="text" id="nom" placeholder="Nom de la donnée">
-        <div id="fileLinks"></div>
-        <button id="saveButton">Enregistrer</button>
-        <button id="clearButton" disabled>Effacer Sélection</button>
-        <div id="hexagonCounter">Hexagones sélectionnés: 0</div>
-        <button onclick="window.location.href='zone.php'">Retour</button>
+    <header>
+        Cartographie des récits et socio-écosystèmes
+        <p>
+        <nav>
+            <ul>
+                <li><a href="http://localhost/SITE_MOLENE2/PHP/projet_molene.php">Projet sélectionné</a></li>
+                <li><a href="http://localhost/SITE_MOLENE2/PHP/data.php">Données</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="button-container">
+        <button onclick="window.location.href='zone.php'">Ajouter une zone</button>
     </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    <div id="map"></div>
 
     <script>
     var map = L.map('map').setView([48.395, -4.958], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-if (typeof savedZones !== "undefined") {
-    
-    console.log("Données chargées :", savedZones);
+    if (typeof savedZones !== "undefined") {
+        savedZones.forEach(zoneData => {
+            let mergedPolygon = [];
+
+            zoneData.h3_zone.forEach(h3Index => {
+                let polygonCoords = h3.cellToBoundary(h3Index).map(c => [c[0], c[1]]);
+                mergedPolygon.push(polygonCoords);
+            });
+
+            if (mergedPolygon.length > 0) {
+                let polygon = L.polygon(mergedPolygon, {
+                    color: "transparent",  // 🔹 Bordure invisible
+                    weight: 0,             // 🔹 Supprime les contours
+                    fillColor: "blue",     // 🔹 Uniformiser la couleur
+                    fillOpacity: 0.1,        // 🔹 Améliorer la fusion visuelle
+                    fillRule: "evenodd",
+
+                }).addTo(map);
+                polygon.bindTooltip(`<strong>${zoneData.nom}</strong>`, { permanent: false });
+            }
+        });
+    }
 
     savedZones.forEach(zoneData => {
-        let mergedPolygon = [];
+    let mergedPolygon = [];
 
-        zoneData.h3_zone.forEach(h3Index => {
-            let polygonCoords = h3.cellToBoundary(h3Index).map(c => [c[0], c[1]]);
-            mergedPolygon.push(polygonCoords);
-        });
-
-        if (mergedPolygon.length > 0) {
-            let polygon = L.polygon(mergedPolygon, {
-                color: "green",
-                weight: 2,
-                fillOpacity: 0.5
-            }).addTo(map);
-
-            // 🔹 Infobulle au survol (corrigée)
-            polygon.bindTooltip(`<strong>${zoneData.nom}</strong>`, { 
-                permanent: false, 
-                direction: "auto", 
-                opacity: 0.8 
-            });
-
-            // 🔹 Popup au clic pour supprimer
-            polygon.on("click", function (e) {
-                L.popup()
-                    .setLatLng(e.latlng)
-                    .setContent(`
-                        <strong>${zoneData.nom}</strong><br>
-                        Hexagones: ${zoneData.h3_zone.length}<br>
-                        <button onclick="deleteData(${zoneData.data_id})" 
-                            style="background:red;color:white;padding:5px;border:none;border-radius:3px;cursor:pointer;">
-                            Supprimer cette donnée
-                        </button>
-                    `)
-                    .openOn(map);
-            });
-        }
+    zoneData.h3_zone.forEach(h3Index => {
+        let polygonCoords = h3.cellToBoundary(h3Index).map(c => [c[0], c[1]]);
+        mergedPolygon.push(polygonCoords);
     });
-}
 
+    if (mergedPolygon.length > 0) {
+        let polygon = L.polygon(mergedPolygon, {
+            color: "transparent",
+            weight: 0,
+            fillColor: "blue",
+            fillOpacity: 0.5
+        }).addTo(map);
 
-    var h3Resolution = 10;
-    var selectedCells = new Set();
-    var cellPolygons = {};
+        polygon.bindTooltip(`<strong>${zoneData.nom}</strong>`, { permanent: false });
 
-    function toggleButtons() {
-        document.getElementById("hexagonCounter").textContent = `Hexagones sélectionnés: ${selectedCells.size}`;
-        document.getElementById("saveButton").disabled = selectedCells.size === 0;
-        document.getElementById("clearButton").disabled = selectedCells.size === 0;
-    }
-
-    function drawHexagons() {
-        Object.values(cellPolygons).forEach(polygon => map.removeLayer(polygon));
-        cellPolygons = {};
-        selectedCells.clear();
-        toggleButtons();
-
-        let bounds = map.getBounds();
-        let hexagons = h3.polygonToCells(
-            [
-                [bounds.getNorthWest().lat, bounds.getNorthWest().lng],
-                [bounds.getSouthWest().lat, bounds.getSouthWest().lng],
-                [bounds.getSouthEast().lat, bounds.getSouthEast().lng],
-                [bounds.getNorthEast().lat, bounds.getNorthEast().lng],
-            ],
-            h3Resolution
-        );
-
-        hexagons.forEach(h3Index => {
-            let polygonCoords = h3.cellToBoundary(h3Index).map(c => [c[0], c[1]]);
-            let polygon = L.polygon(polygonCoords, { color: 'blue', weight: 1, fillOpacity: 0 });
-
-            polygon.on('click', function () {
-                if (selectedCells.has(h3Index)) {
-                    selectedCells.delete(h3Index);
-                    this.setStyle({ fillOpacity: 0 });
-                } else {
-                    selectedCells.add(h3Index);
-                    this.setStyle({ fillOpacity: 0.5, color: 'red' });
+        polygon.on("dblclick", function () {
+            fetch("get_data.php", {
+                method: "POST",
+                body: JSON.stringify({ nom: zoneData.nom }),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => res.json())
+            .then(data => {
+                let chemin = data.chemin;
+                if (!chemin) {
+                    L.popup()
+                        .setLatLng(this.getBounds().getCenter())
+                        .setContent(`<strong>${zoneData.nom}</strong><br><p>Aucune donnée enregistrée</p>`)
+                        .openOn(map);
+                    return;
                 }
-                toggleButtons();
-            });
 
-            cellPolygons[h3Index] = polygon;
-            polygon.addTo(map);
+                // Vérifier l'extension du fichier pour décider comment l'afficher
+                let extension = chemin.split('.').pop().toLowerCase();
+                let content = "";
+
+                if (["png", "jpg", "jpeg", "gif"].includes(extension)) {
+                    // 🔹 Afficher une image directement
+                    content = `<img src="${chemin}" style="max-width:200px;max-height:200px;">`;
+                } else if (["txt", "csv", "json"].includes(extension)) {
+                    // 🔹 Charger et afficher le contenu textuel du fichier
+                    fetch(chemin)
+                        .then(response => response.text())
+                        .then(fileContent => {
+                            L.popup()
+                                .setLatLng(polygon.setLatLng([0, 0]))
+                                .setContent(`<strong>${zoneData.nom}</strong><br><pre style="max-height:150px;overflow:auto;">${fileContent}</pre>`)
+                                .openOn(map);
+
+                                popup.update();
+                        })
+                        .catch(error => console.error("Erreur de chargement du fichier :", error));
+                    return;
+                } else {
+                    // 🔹 Autre format (on propose juste un lien)
+                    content = `<a href="${chemin}" target="_blank">Ouvrir le fichier</a>`;
+                }
+
+                L.popup()
+                    .setLatLng(this.getBounds().getCenter())
+                    .setContent(`<strong>${zoneData.nom}</strong><br>${content}`)
+                    .openOn(map);
+            })
+            .catch(error => console.error("Erreur de récupération des données :", error));
         });
     }
-
-    document.getElementById("resolutionSelect").addEventListener("change", function () {
-        h3Resolution = parseInt(this.value, 10);
-        drawHexagons();
-    });
-
-    document.getElementById("saveButton").addEventListener("click", function () {
-        let nom = document.getElementById("nom").value;
-        let hexes = Array.from(selectedCells);
-
-        fetch("save_data.php", {
-            method: "POST",
-            body: JSON.stringify({ nom: nom, hexes: hexes }),
-            headers: { "Content-Type": "application/json" }
-        }).then(res => res.json()).then(data => {
-            if (data.success) {
-                window.location.href = `zone.php?nom=${encodeURIComponent(nom)}`;
-            }
-        });
-    });
-
-    map.on('moveend', drawHexagons);
-    drawHexagons();
-
-    saveButton.addEventListener("click", function () {
-    let nom = document.getElementById("nom").value;
-    let hexes = Array.from(selectedCells);
-
-    fetch("save_data.php", {
-        method: "POST",
-        body: JSON.stringify({ nom: nom, hexes: hexes }),
-        headers: { "Content-Type": "application/json" }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            alert("Données enregistrées avec succès !");
-            window.location.reload();  // 🚀 Recharge juste la page
-        } else {
-            alert("Erreur : " + data.message);
-        }
-    })
-    .catch(error => alert("Erreur réseau : " + error));
 });
-
-    function deleteData(data_id) {
-        if (!confirm("Voulez-vous vraiment supprimer cette donnée ?")) return;
-
-        fetch("delete_data.php", {
-            method: "POST",
-            body: JSON.stringify({ data_id: data_id }),
-            headers: { "Content-Type": "application/json" }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert("Donnée supprimée avec succès !");
-                window.location.reload();  // 🚀 Recharge la page pour mettre à jour la carte
-            } else {
-                alert("Erreur : " + data.message);
-            }
-        })
-        .catch(error => alert("Erreur réseau : " + error));
-    }
-
 
 
     </script>

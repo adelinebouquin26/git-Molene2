@@ -38,22 +38,21 @@ try {
 <body>
     <header>
         <div class="hero">
-            <img src="..\image\projets.jpg" alt="Projets">
+            <img src="..\image\carte_monde.png" alt="Projets">
             <div class="login-link">
                 <?php if ($isLoggedIn): ?>
-                    <a href="logout.php">Log out</a> 
+                    <a href="logout.php">Déconnexion</a> 
                 <?php else: ?>
-                    <a href="authentification.php">Log in</a>
+                    <a href="authentification.php">Déconnexion</a>
                 <?php endif; ?>
             </div>
             <h1>Projets<br>Privés et publics</h1>
             <nav>
                 <ul>
-                    <li><a href="projets.php">Accueil</a></li>
-                    <li><a href="carte.php">Carte interactive</a></li>
+                    <li><a href="zone.php">Carte</a></li>
                     <li>
                         <?php if ($isLoggedIn): ?>
-                            <a href="page_edition.php">Mon espace</a>
+                            <a href="mon_espace.php">Mon espace</a>
                         <?php else: ?>
                             <a href="authentification.php">Mon espace</a>
                         <?php endif; ?>
@@ -75,7 +74,7 @@ try {
                             <div class="card1">
                                 <img src="../image/projetmolene.png" alt="<?= htmlspecialchars($projet['nom']) ?>">
                                 <code>Projet Privé</code>
-                                <a href="http://localhost/SITE_MOLENE2/PHP/index.php" target="_blank"><?= htmlspecialchars($projet['nom']) ?></a>
+                                <a href="projet_molene.php"><?= htmlspecialchars($projet['nom']) ?></a>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -105,36 +104,36 @@ try {
 
     </main>
     
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Informations générales</h4>
-                <ul>
-                    <li><a href="#">Mentions légales</a></li>
-                    <li><a href="#">Politique de confidentialité</a></li>
-                    <li><a href="#">Conditions d’utilisation</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Navigation rapide</h4>
-                <ul>
-                    <li><a href="#">Accueil</a></li>
-                    <li><a href="#">Carte interactive</a></li>
-                    <li><a href="#">S’inscrire / Se connecter</a></li>
-                    <li><a href="#">Ajouter des données</a></li>
-                    <li><a href="#">Espace personnel</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Ressources et Contacts</h4>
-                <ul>
-                    <li><a href="#">À propos du projet</a></li>
-                    <li><a href="#">Documentation scientifique</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
+    <footer style="padding: 30px 0; text-align: center; font-size: 14px;">
+
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+
+      <h3 style="margin-bottom: 10px;">Projet "Récits et Imaginaires Croisés"</h3>
+
+      <p>Réalisé par Raphaël & Adeline dans le cadre du projet de fin d'études M1 à l'ISEN Brest.</p>
+
+ 
+
+      <div style="margin-top: 20px;">
+
+        <h4>Contact</h4>
+
+        <p>Email Raphaël : <a href="mailto:raphael@example.com" style="color: #007bff;">raphael.cardinal@isen-ouest.yncrea.com</a></p>
+
+        <p>Email Adeline : <a href="mailto:adeline@example.com" style="color: #007bff;">adeline.bouquin@isen-ouest.yncrea.com</a></p>
+
+        <p>ISEN Brest : <a href="https://isen-brest.fr" target="_blank" style="color: #007bff;">www.isen-brest.fr</a></p>
+
+      </div>
+
+ 
+
+      <div style="margin-top: 20px; font-size: 12px; color: #777;">
+
+      </div>
+
+    </div>
+
+  </footer>
 </body>
 </html>

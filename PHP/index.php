@@ -1,29 +1,6 @@
 <?php
-include('config.php'); // Connexion à la base de données
-
+session_start();
 $isLoggedIn = isset($_SESSION["id_utilisateur"]);
-
-// Récupération des collaborateurs du projet
-try {
-    $stmt = $pdo->prepare("
-        SELECT u.nom, u.prenom, up.role 
-        FROM utilisateur u 
-        JOIN utilisateur_projet up ON u.id_utilisateur = up.id_utilisateur 
-        WHERE up.id_projet = 1
-    ");
-    $stmt->execute();
-    $collaborateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Vérifier si l'utilisateur a une invitation en attente
-    $stmtNotif = $pdo->prepare("SELECT role FROM utilisateur_projet WHERE id_utilisateur = :id_utilisateur AND id_projet = :id_projet AND role = 'en attente'");
-    $stmtNotif->bindParam(":id_utilisateur", $id_utilisateur);
-    $stmtNotif->bindParam(":id_projet", $id_projet);
-    $stmtNotif->execute();
-    $invitation = $stmtNotif->fetch(PDO::FETCH_ASSOC);
-
-} catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
-}
 ?>
 
 <!DOCTYPE html>
@@ -32,156 +9,86 @@ try {
     <meta charset="utf8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Île de Molène - Érosion et Submersion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 </head>
 <body>
     <header>
         <div class="hero">
-            <img src="..\image\ile_molene_recadrer.jpg" alt="Île de Molène">
+            <img src="..\image\visuel_accueil_1.jpg" alt="Imaginaire">
             <div class="login-link">
                 <?php if ($isLoggedIn): ?>
-                    <a href="http://localhost/SITE_MOLENE2/PHP/logout.php"> Déconnexion </a>
+                    <a href="http://localhost/SITE_MOLENE2/PHP/logout.php">Deconnexion</a>
                 <?php else: ?>
-                    <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php"> Connexion </a>
+                    <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php">Connexion</a>
                 <?php endif; ?>
             </div>
-            <h1>Île de Molène<br>Érosion et Submersion</h1>
-            <nav>
-                <ul>
-                    <li><a href="projets.php">Accueil</a></li>
-                    <li><a href="index.php">Projet</a></li>
-                    <li><a href="http://localhost/SITE_MOLENE2/PHP/carte.php">Carte interactive</a></li>
-                    <li><a href="http://localhost/SITE_MOLENE2/PHP/page_edition.php">Données</a></li>
-                    <li>
-                        <?php if ($isLoggedIn): ?>
-                            <a href="http://localhost/SITE_MOLENE2/PHP/page_edition.php">Mon espace</a>
-                        <?php else: ?>
-                            <a href="http://localhost/SITE_MOLENE2/PHP/authentification.php">Mon espace</a>
-                        <?php endif; ?>
-                    </li>
-                </ul>
-            </nav>
+            <h1>Récits et imaginaires croisés<br></h1><br><h2>Espace d'échange, de création et de partage</h2>
         </div>
     </header>
     
     <main>
         <section class="intro">
-            <h2>Changement climatique : Molène en première ligne</h2>
-            <p>L’Île de Molène subit les effets croissants du changement climatique, avec une intensification de l’érosion côtière et des submersions marines...</p>
+            <h2>Bienvenue sur Récits et imaginaires croisés</h2>
+            <h3>Un espace collaboratif dédié à la gestion et au partage de données</h3>
+            <p>Notre plateforme a été conçue pour faciliter le stockage, le partage et la visualisation de données au sein de projets collaboratifs.
+            <h3>Un espace de stockage et de partage</h3>
+            Ce site permet de créer des projets collaboratifs où chaque utilisateur peut stocker, organiser et partager des données avec son équipe. Qu’il s’agisse d’analyses scientifiques, de rapports ou de fichiers multimédias, tout est centralisé pour une meilleure gestion.
+            <h3>Une visualisation intuitive des données</h3>
+            Les données enregistrées peuvent être visualisées de manière interactive grâce à des outils adaptés, notamment des cartes et des graphiques dynamiques, afin d’exploiter l’information plus efficacement.
+            <h3>Comment utiliser le site ?</h3>
+            Créer un compte : L’inscription est nécessaire pour interagir avec les autres utilisateurs et gérer des projets.<p>
+            Créer ou rejoindre un projet : Chaque utilisateur peut créer un projet public ou privé et y ajouter ses propres données via son espace personnel.<p>
+            Classer les données par niveau : Lorsqu’une donnée est ajoutée, elle doit être classée selon son niveau de traitement.<p>
+        </p>
         </section>
 
-        <section class="featured">
-            <img src="..\image\perrinremonte.png" alt="Cartographie">
-            <div class="featured-text">
-                <h3>Je pars cartographier une île bretonne à partir de ZERO</h3>
-                <button>Lire l'article</button>
-            </div>
+        <section class="intro">
+            <h2>Le système des niveaux de traitement</h2>
+            <h3>Niveau 1</h3>
+            La donnée n’a pas encore été traitée.            
+            <h3>Niveau 2</h3>
+            La donnée est en cours de pré-analyse.
+            <h3>Niveau 3</h3>
+            La donnée a été modifiée ou enrichie (exemple : annotations, premières analyses).
+            <h3>Niveau 4</h3>
+            Le traitement est finalisé (exemple : un montage vidéo terminé).
+
+        </p>
         </section>
 
-        <!-- Section Collaborateurs -->
-        <section class="collaborators">
-            <h2>Collaborateurs</h2>
-            <div class="collaborators-container">
-                <?php foreach ($collaborateurs as $collaborateur): ?>
-                    <div class="collaborator-card">
-                        <img src="../image/avatar-placeholder.jpg" alt="Avatar">
-                        <div class="collaborator-name"><?= htmlspecialchars($collaborateur['prenom'] . ' ' . $collaborateur['nom']) ?></div>
-                        <div class="collaborator-role"><?= htmlspecialchars($collaborateur['role']) ?></div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Barre de recherche d'utilisateur -->
-            <input type="text" id="search-user" placeholder="Rechercher et Ajouter un nouveau collaborateur...">
-            <div id="user-results"></div>
-        
-            <!-- Zone de notification d'invitation -->
-            <?php if ($invitation): ?>
-                <div class="invitation-notification">
-                    <p>Vous avez été invité à rejoindre ce projet.</p>
-                    <button onclick="acceptInvitation(<?= $id_projet ?>, <?= $id_utilisateur ?>)">Accepter</button>
-                    <button onclick="rejectInvitation(<?= $id_projet ?>, <?= $id_utilisateur ?>)">Refuser</button>
-                </div>
-            <?php endif; ?>
-
-        </section>
     </main>
     
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Informations générales</h4>
-                <ul>
-                    <li><a href="#">Mentions légales</a></li>
-                    <li><a href="#">Politique de confidentialité</a></li>
-                    <li><a href="#">Conditions d’utilisation</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Navigation rapide</h4>
-                <ul>
-                    <li><a href="#">Accueil</a></li>
-                    <li><a href="#">Carte interactive</a></li>
-                    <li><a href="#">S’inscrire / Se connecter</a></li>
-                    <li><a href="#">Ajouter des données</a></li>
-                    <li><a href="#">Espace personnel</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Ressources et Contacts</h4>
-                <ul>
-                    <li><a href="#">À propos du projet</a></li>
-                    <li><a href="#">Documentation scientifique</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
+    <footer style="padding: 30px 0; text-align: center; font-size: 14px;">
 
-    <!--Collaborateur ajout-->
-    <script>
-        $(document).ready(function() {
-            $('#user-results').hide(); // Cache la barre au chargement de la page
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
 
-            $('#search-user').on('keyup', function() {
-                let query = $(this).val().trim(); // Supprime les espaces inutiles
+      <h3 style="margin-bottom: 10px;">Projet "Récits et Imaginaires Croisés"</h3>
 
-                if (query.length > 1) {  
-                    $.post('search_user.php', {query: query}, function(data) {
-                        if (data.trim() !== '') { // Vérifie s'il y a des résultats
-                            $('#user-results').html(data).show(); // Affiche la barre
-                        } else {
-                            $('#user-results').hide(); // Cache la barre si aucun résultat
-                        }
-                    });
-                } else {
-                    $('#user-results').hide(); // Cache si l'entrée est vide
-                }
-            });
-        });
+      <p>Réalisé par Raphaël & Adeline dans le cadre du projet de fin d'études M1 à l'ISEN Brest.</p>
 
+ 
 
-        function inviteUser(userId, projectId) {
-            $.post('invite_user.php', {user_id: userId, project_id: projectId}, function(response) {
-                alert(response);
-            });
-        }
+      <div style="margin-top: 20px;">
 
-        function acceptInvitation(projectId, userId) {
-            $.post('handle_invitation.php', {project_id: projectId, user_id: userId, action: 'accept'}, function() {
-                location.reload();
-            });
-        }
+        <h4>Contact</h4>
 
-        function rejectInvitation(projectId, userId) {
-            $.post('handle_invitation.php', {project_id: projectId, user_id: userId, action: 'reject'}, function() {
-                location.reload();
-            });
-        }
+        <p>Email Raphaël : <a href="mailto:raphael@example.com" style="color: #007bff;">raphael.cardinal@isen-ouest.yncrea.com</a></p>
 
-    </script>
+        <p>Email Adeline : <a href="mailto:adeline@example.com" style="color: #007bff;">adeline.bouquin@isen-ouest.yncrea.com</a></p>
+
+        <p>ISEN Brest : <a href="https://isen-brest.fr" target="_blank" style="color: #007bff;">www.isen-brest.fr</a></p>
+
+      </div>
+
+ 
+
+      <div style="margin-top: 20px; font-size: 12px; color: #777;">
+
+      </div>
+
+    </div>
+
+  </footer>
 </body>
 </html>

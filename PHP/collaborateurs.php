@@ -14,7 +14,7 @@ if (!$conn) {
 }
 
 // Requête SQL pour récupérer les collaborateurs
-$query = "SELECT Nom, Prenom FROM utilisateur"; // Adaptation selon la structure de ta base de données
+$query = "SELECT Nom, Prenom, id_utilisateur FROM utilisateur"; // Adaptation selon la structure de ta base de données
 $result = mysqli_query($conn, $query);
 
 if (!$result) {
