@@ -48,8 +48,10 @@ Accéder via http://localhost/nom-du-dossier
 
 Structure du projet
 
-index.php                → Page d’accueil
+- index.php                → Page d’accueil
+
 └──> authentification.php       → Connexion / Inscription
+
      └──> projets.php                  → Liste des projets
      
           ├──> projet_molene.php           → Page spécifique d’un projet
