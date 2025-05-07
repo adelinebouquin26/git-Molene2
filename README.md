@@ -1,6 +1,7 @@
 Récits et Imaginaires Croisés
 
 Présentation du projet
+
 Récits et Imaginaires Croisés est une plateforme web collaborative permettant d'explorer, de structurer et de visualiser des données ancrés dans des territoires spécifiques. Elle associe des contenus multimédias (textes, sons, images) à une carte interactive basée sur un maillage hexagonal dynamique.
 
 Ce projet s’inscrit à la croisée des technologies du web, de la cartographie et de la narration.
@@ -50,15 +51,25 @@ Accéder via http://localhost/nom-du-dossier
 Structure du projet
 
 index.php                → Page d’accueil
+
 └──> authentification.php       → Connexion / Inscription
+
      └──> projets.php                  → Liste des projets
+     
           ├──> projet_molene.php           → Page spécifique d’un projet
+          
           │     ├──> zone.php                  → Carte interactive – attribution
+          
           │     ├──> carte.php                 → Carte interactive – visualisation
+          
           │     ├──> data.php                  → Visualisation / tri des données
+          
           │     ├──> search_user.php           → Recherche de collaborateurs
+          
           │     ├──> invite_user.php           → Ajout collaborateur
+          
           │     └──> handle_invitation.php     → Réponse à une invitation (pas encore fonctionnel)
+          
           └──> mon_espace.php              → Espace personnel
                 └──> ajout_donnee.php          → Ajout de données
 
