@@ -1,27 +1,35 @@
 <?php
-
+// -------------------------------------------------
+// Début de session et récupération des variables
+// -------------------------------------------------
 session_start();
-
 $isLoggedIn = isset($_SESSION["id_utilisateur"]);
-
 $id_utilisateur = $_SESSION["id_utilisateur"];
 $nom = $_SESSION["nom"];
 $prenom = $_SESSION["prenom"];
 $id_fonction = $_SESSION["id_fonction"];
 
-// Inclure les fichiers nécessaires
+// -------------------------------------------------
+// Inclusion des fichiers nécessaires
+// -------------------------------------------------
 include('collaborateurs.php');
-//include('donnees.php');
+// include('donnees.php');
 include('types.php');
 
-// Connexion à la base
+// -------------------------------------------------
+// Connexion à la base de données
+// -------------------------------------------------
 $pdo = new PDO('mysql:host=localhost;dbname=data_molène', 'root', '');
 
-// Déterminer l'ordre de tri par défaut
-$orderBy = "date_ajout DESC"; // Valeur par défaut
+// -------------------------------------------------
+// Définition de l'ordre de tri par défaut
+// -------------------------------------------------
+$orderBy = "date_ajout DESC"; 
 $whereClause = ""; 
 
-// Vérifier si un tri spécifique est demandé
+// -------------------------------------------------
+// Vérification d'un tri spécifique via GET
+// -------------------------------------------------
 if (isset($_GET['order'])) {
     switch ($_GET['order']) {
         case "date_asc":
@@ -42,7 +50,9 @@ if (isset($_GET['order'])) {
     }
 }
 
-// Vérifier si un filtre spécifique est appliqué
+// -------------------------------------------------
+// Vérification d'un filtre spécifique via GET
+// -------------------------------------------------
 if (isset($_GET['filter'])) {
     $filter = $_GET['filter'];
 
@@ -64,15 +74,22 @@ if (isset($_GET['filter'])) {
     }
 }
 
-// Exécuter la requête avec filtre + tri
+// -------------------------------------------------
+// Exécution de la requête avec tri et filtre
+// -------------------------------------------------
 $query = "SELECT * FROM data $whereClause ORDER BY $orderBy";
 $allStmt = $pdo->query($query);
 $allData = $allStmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Récupérer les 5 dernières données ajoutées
+// -------------------------------------------------
+// Récupération des 5 dernières données ajoutées
+// -------------------------------------------------
 $recentStmt = $pdo->query("SELECT * FROM data ORDER BY date_ajout DESC LIMIT 5");
 $recentData = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
 
+// -------------------------------------------------
+// Traitement du formulaire POST (modification/suppression)
+// -------------------------------------------------
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['modifier'])) {
         $id = $_POST['id_data'];
@@ -94,9 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<p class='success-message'>Donnée supprimée avec succès !</p>";
     }
 } 
-
 ?>
-
 
 
 <!DOCTYPE html>

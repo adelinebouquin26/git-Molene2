@@ -1,17 +1,18 @@
 <?php
-// Inclure la connexion à la base de données depuis config.php
+//---- Inclure la connexion à la base de données depuis config.php
 include('config.php');
 
+//---- Vérification si l'utilisateur est connecté et récupération de l'ID de l'utilisateur
 $isLoggedIn = isset($_SESSION["id_utilisateur"]);
 $id_utilisateur = $isLoggedIn ? $_SESSION["id_utilisateur"] : null;
 
 try {
-    // Récupérer les projets publics
+    //---- Récupérer les projets publics
     $stmtPublic = $pdo->prepare("SELECT * FROM projet WHERE est_prive = 0");
     $stmtPublic->execute();
     $projetsPublics = $stmtPublic->fetchAll(PDO::FETCH_ASSOC);
 
-    // Récupérer les projets privés de l'utilisateur connecté
+    //---- Récupérer les projets privés de l'utilisateur connecté
     $projetsPrives = [];
     if ($isLoggedIn) {
         $stmtPrivate = $pdo->prepare("SELECT p.* FROM projet p
@@ -23,6 +24,7 @@ try {
     }
 
 } catch (PDOException $e) {
+    //---- Gestion des erreurs de connexion à la base de données
     die("Erreur de connexion : " . $e->getMessage());
 }
 ?>
@@ -30,12 +32,18 @@ try {
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <!-- -------------------------------------------------
+         Métadonnées et titre de la page
+    -------------------------------------------------- -->
     <meta charset="utf8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Île de Molène - Projets</title>
     <link rel="stylesheet" href="../CSS/projets.css">
 </head>
 <body>
+    <!-- -------------------------------------------------
+         En-tête de la page avec image et navigation
+    -------------------------------------------------- -->
     <header>
         <div class="hero">
             <img src="..\image\carte_monde.png" alt="Projets">
@@ -62,10 +70,16 @@ try {
         </div>
     </header>
     
+    <!-- -------------------------------------------------
+         Section principale des projets (privés et publics)
+    -------------------------------------------------- -->
     <main>
         
         <section id="projects">
 
+            <!-- -------------------------------------------------
+                 Section des projets privés (si l'utilisateur est connecté)
+            -------------------------------------------------- -->
             <div class="project-tile">
                 <h1>Projets privés</h1>
                 <div class="project-cards">
@@ -83,6 +97,9 @@ try {
                 </div>
             </div>
 
+            <!-- -------------------------------------------------
+                 Section des projets publics (toujours visible)
+            -------------------------------------------------- -->
             <div class="project-tile">
                 <h1>Projets publics</h1>
                 <div class="project-cards">
@@ -104,6 +121,9 @@ try {
 
     </main>
     
+    <!-- -------------------------------------------------
+         Pied de page avec informations de contact
+    -------------------------------------------------- -->
     <footer style="padding: 30px 0; text-align: center; font-size: 14px;">
 
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
@@ -112,24 +132,14 @@ try {
 
       <p>Réalisé par Raphaël & Adeline dans le cadre du projet de fin d'études M1 à l'ISEN Brest.</p>
 
- 
-
       <div style="margin-top: 20px;">
-
         <h4>Contact</h4>
-
         <p>Email Raphaël : <a href="mailto:raphael@example.com" style="color: #007bff;">raphael.cardinal@isen-ouest.yncrea.com</a></p>
-
         <p>Email Adeline : <a href="mailto:adeline@example.com" style="color: #007bff;">adeline.bouquin@isen-ouest.yncrea.com</a></p>
-
         <p>ISEN Brest : <a href="https://isen-brest.fr" target="_blank" style="color: #007bff;">www.isen-brest.fr</a></p>
-
       </div>
 
- 
-
       <div style="margin-top: 20px; font-size: 12px; color: #777;">
-
       </div>
 
     </div>

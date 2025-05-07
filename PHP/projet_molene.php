@@ -3,11 +3,6 @@ include('config.php'); // Connexion à la base de données
 
 $isLoggedIn = isset($_SESSION["id_utilisateur"]);
 
-//Ajoute ceci pour récupérer l’ID du projet depuis l’URL :
-//$id_projet = isset($_GET['id']) ? intval($_GET['id']) : null;
-//if (!$id_projet) {
-//    die("Aucun projet sélectionné.");
-//}
 
 // Récupération des collaborateurs du projet
 try {
@@ -82,14 +77,6 @@ Prêt à explorer et contribuer au projet Molène ?<br><p>
 
 Utilisez les outils à votre disposition pour commencer dès maintenant !</p>
         </section>
-
-        <!--<section class="featured">
-            <img src="..\image\perrinremonte.png" alt="Cartographie">
-            <div class="featured-text">
-                <h3>Je pars cartographier une île bretonne à partir de ZERO</h3>
-                <button>Lire l'article</button>
-            </div>
-        </section>-->
 
         <!-- Section Collaborateurs -->
         <section class="collaborators">
