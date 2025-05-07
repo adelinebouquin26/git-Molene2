@@ -5,6 +5,7 @@ Présentation du projet
 Récits et Imaginaires Croisés est une plateforme web collaborative permettant d'explorer, de structurer et de visualiser des données ancrés dans des territoires spécifiques. Elle associe des contenus multimédias (textes, sons, images) à une carte interactive basée sur un maillage hexagonal dynamique.
 
 Fonctionnalités principales
+
 - Création de compte et authentification
 - Ajout, modification et suppression de données multimédias
 - Visualisation des données sur carte interactive
@@ -14,6 +15,7 @@ Installation (en local) :
 Pour tester ou développer ce projet en local, suivez les étapes ci-dessous.
 
 Pré-requis
+
 Avant de commencer, assurez-vous d’avoir :
 
 1. Un compte GitHub
@@ -48,8 +50,9 @@ Accéder via http://localhost/nom-du-dossier
 
 Structure du projet
 
-- index.php                → Page d’accueil
 
+- index.php                → Page d’accueil
+  
 └──> authentification.php       → Connexion / Inscription
 
      └──> projets.php                  → Liste des projets
