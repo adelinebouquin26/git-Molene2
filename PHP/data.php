@@ -129,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- -------------------------------------------------
          Feuille de style externe
     -------------------------------------------------- -->
-    <link rel="stylesheet" href="http://localhost/SITE_MOLENE2/CSS/style_page_edition.css">
+    <link rel="stylesheet" href="http://localhost/SITE_MOLENE2/CSS/mon_espace.css">
 
     <!-- -------------------------------------------------
          Librairie jQuery
